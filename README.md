@@ -41,10 +41,10 @@ python app.py
 3. Open your web browser and go to `http://127.0.0.1:5000` to view the application.
 
 ## Project Structure
-
 - `app.py`: The main Flask application file that sets up the server and API routes.
 - `templates/index.html`: The main HTML file that includes the structure of the page and the script for dynamically loading content.
 - `static/styles.css`: The CSS file that styles the application.
+- `static/script.js`: The JavaScript file that handles fetching and displaying the titles
 
 ## Contributing
 
