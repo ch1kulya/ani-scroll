@@ -5,40 +5,30 @@ const App = {
     isLoading: false,
     showImages: false,
 
-    loadMoreTitles: function(count) {
+    loadMoreTitles: async function(count) {
         if (App.isLoading) return;
         App.isLoading = true;
-        const requests = [];
     
-        for (let i = 0; i < count; i++) {
-            requests.push(
-                m.request({
+        try {
+            for (let i = 0; i < count; i++) {
+                const result = await m.request({
                     method: "GET",
                     url: API_URL,
                     params: {
                         filter: 'names.ru,description,season.year,genres,player.series.string,posters.original.url',
                         description_type: 'plain'
-                    },
-                    headers: {
-                        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
                     }
-                })
-            );
-        }
-    
-        Promise.all(requests)
-            .then(results => {
-                App.titles = App.titles.concat(results);
-            })
-            .catch(error => {
-                console.error("Error fetching titles:", error);
-            })
-            .finally(() => {
-                App.isLoading = false;
+                });
+                App.titles.push(result);
                 m.redraw();
-            });
-    },
-    
+                await new Promise(resolve => setTimeout(resolve, 80));
+            }
+        } catch (error) {
+            console.error("Error fetching titles:", error);
+        } finally {
+            App.isLoading = false;
+        }
+    },    
 
     toggleImages: function() {
         App.showImages = !App.showImages;
