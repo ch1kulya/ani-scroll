@@ -9,7 +9,7 @@ const App = {
         if (App.isLoading) return;
         App.isLoading = true;
         const requests = [];
-
+    
         for (let i = 0; i < count; i++) {
             requests.push(
                 m.request({
@@ -19,11 +19,13 @@ const App = {
                         filter: 'names.ru,description,season.year,genres,player.series.string,posters.original.url',
                         description_type: 'plain'
                     },
-                    background: true
+                    headers: {
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                    }
                 })
             );
         }
-
+    
         Promise.all(requests)
             .then(results => {
                 App.titles = App.titles.concat(results);
@@ -36,6 +38,7 @@ const App = {
                 m.redraw();
             });
     },
+    
 
     toggleImages: function() {
         App.showImages = !App.showImages;
