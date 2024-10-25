@@ -18,7 +18,8 @@ const App = {
                     params: {
                         filter: 'names.ru,description,season.year,genres,player.series.string,posters.original.url',
                         description_type: 'plain'
-                    }
+                    },
+                    background: true
                 })
             );
         }
