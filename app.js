@@ -8,20 +8,28 @@ const App = {
     loadMoreTitles: async function(count) {
         if (App.isLoading) return;
         App.isLoading = true;
-    
+        
         try {
-            for (let i = 0; i < count; i++) {
+            let titlesFetched = 0;
+            while (titlesFetched < count) {
                 const result = await m.request({
                     method: "GET",
                     url: API_URL,
                     params: {
-                        filter: 'names.ru,description,season.year,genres,player.series.string,posters.original.url',
+                        filter: 'id,names.ru,description,season.year,genres,player.series.string,posters.original.url',
                         description_type: 'plain'
                     }
                 });
-                App.titles.push(result);
-                m.redraw();
-                await new Promise(resolve => setTimeout(resolve, 80));
+                
+                if (!App.titles.find(title => title.id === result.id)) {
+                    App.titles.push(result);
+                    titlesFetched++;
+                    m.redraw();
+                } else {
+                    console.log("Дубликат тайтла найден, повторный запрос...");
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 75));
             }
         } catch (error) {
             console.error("Error fetching titles:", error);
