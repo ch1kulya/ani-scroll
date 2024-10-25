@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>InfinityAnimeList</title>
+    <link rel="stylesheet" href="https://raw.githack.com/ch1kulya/styleBasic/main/styleBasic.css">
+    <link rel="icon" href="https://raw.githack.com/ch1kulya/AutoCrop/main/favicon.ico" type="image/x-icon">
+    <script src="https://unpkg.com/mithril/mithril.js"></script>
+    <style>
+    .title-block {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .title-content {
+        display: flex;
+        align-items: flex-start;
+    }
+    .poster {
+        max-width: 120px;
+        margin-right: 20px;
+        border-radius: 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .title-info h2 {
+        margin-bottom: 10px;
+    }
+    .title-description p {
+        margin-top: 15px;
+    }
+    .spinner {
+        display: block;
+        margin: 0 auto;
+    }
+    .toggle-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px;
+    }
+    #image-toggle {
+        top: 20px;
+        left: 20px;
+        right: unset;
+    }
+    .container {
+        width: 90%;
+        max-width: 900px;
+    }
+    @media (max-width: 600px) {
+        .title-content{
+            flex-direction: column;
+        }
+        .poster {
+            align-items: center;
+            margin: auto;
+            max-width: 80%;
+            margin-bottom: 15px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <button id="image-toggle" class="theme-toggle">📷</button>
+    <button id="theme-toggle" class="theme-toggle">🌙</button>
+    <div class="container">
+        <div id="app"></div>
+    </div>
+    <script src="https://raw.githack.com/ch1kulya/styleBasic/main/theme.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
