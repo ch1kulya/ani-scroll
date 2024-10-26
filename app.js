@@ -16,7 +16,7 @@ const App = {
                     method: "GET",
                     url: API_URL,
                     params: {
-                        filter: 'id,names.ru,description,season.year,genres,player.series.string,posters.original.url',
+                        filter: 'id,names,description,season.year,genres,type.full_string,posters.original.url',
                         description_type: 'plain'
                     }
                 });
@@ -82,9 +82,10 @@ const TitleBlock = {
         const data = vnode.attrs.data;
         const showImages = vnode.attrs.showImages;
         const titleRu = data.names.ru || "Название неизвестно";
+        const titleEn = data.names.en || "";
         const year = data.season && data.season.year ? data.season.year : "Год неизвестен";
         const genres = data.genres ? data.genres.join(", ") : "Жанры неизвестны";
-        const episodes = data.player && data.player.series && data.player.series.string ? data.player.series.string : "Эпизоды неизвестны";
+        const type = data.type && data.type.full_string ? data.type.full_string : "Тип неизвестен";
         const description = data.description || "Нет описания";
         const posterUrl = data.posters && data.posters.original && data.posters.original.url
                           ? "https://www.anilibria.tv" + data.posters.original.url
@@ -97,7 +98,7 @@ const TitleBlock = {
                     m("h2", titleRu),
                     m("p", [m("strong", "Год: "), year]),
                     m("p", [m("strong", "Жанры: "), genres]),
-                    m("p", [m("strong", "Эпизоды: "), episodes])
+                    m("p", [m("strong", "Тип: "), type])
                 ])
             ]),
             m(".title-description", m("p", description))
