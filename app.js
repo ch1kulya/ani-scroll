@@ -14,7 +14,7 @@ const genreColors = {
 const App = {
     titles: [],
     isLoading: false,
-    showImages: false,
+    showImages: true,
 
     loadMoreTitles: async function(count) {
         if (App.isLoading) return;
@@ -59,7 +59,9 @@ const App = {
 
     oninit: function() {
         const savedShowImages = localStorage.getItem('showImages');
-        App.showImages = savedShowImages === 'true';
+        if (savedShowImages !== null) {
+            App.showImages = savedShowImages === 'true';
+        }
         App.loadMoreTitles(5);
         window.addEventListener('scroll', App.onScroll);
         const imageToggleBtn = document.getElementById('image-toggle');
