@@ -15,6 +15,7 @@ const App = {
     titles: [],
     isLoading: false,
     showImages: true,
+    selectedTitle: null, // Новое свойство
 
     loadMoreTitles: async function(count) {
         if (App.isLoading) return;
@@ -27,7 +28,7 @@ const App = {
                     method: "GET",
                     url: API_URL,
                     params: {
-                        filter: 'id,names,description,season.year,genres,type.full_string,posters.original.url',
+                        filter: 'id,names,description,season.year,genres,type.full_string,posters.original.url,player.playlist',
                         description_type: 'plain'
                     }
                 });
@@ -54,6 +55,16 @@ const App = {
         localStorage.setItem('showImages', App.showImages);
         const imageToggleBtn = document.getElementById('image-toggle');
         imageToggleBtn.textContent = App.showImages ? '📷' : '⚡';
+        m.redraw();
+    },
+
+    selectTitle: function(title) {
+        App.selectedTitle = title;
+        m.redraw();
+    },
+
+    backToList: function() {
+        App.selectedTitle = null;
         m.redraw();
     },
 
@@ -86,6 +97,12 @@ const App = {
     },
 
     view: function() {
+        if (App.selectedTitle) {
+            return m(".container", [
+                m(Player, { title: App.selectedTitle })
+            ]);
+        }
+
         return m(".container", [
             App.titles.map(title => m(TitleBlock, { data: title, showImages: App.showImages })),
             App.isLoading ? m(".spinner") : null
@@ -107,7 +124,7 @@ const TitleBlock = {
                           ? "https://www.anilibria.tv" + data.posters.original.url
                           : "";
 
-        return m(".title-block", [
+        return m(".title-block", { onclick: () => App.selectTitle(data), style: { cursor: "pointer" } }, [
             m(".title-content", [
                 showImages && posterUrl ? m("img.poster", { src: posterUrl, alt: titleRu, loading: "lazy" }) : null,
                 m(".title-info", [
@@ -136,6 +153,118 @@ const TitleBlock = {
             m(".title-description", m("p", description))
         ]);
     }
+};
+
+const Player = {
+    oninit: function(vnode) {
+        const title = vnode.attrs.title;
+        const episodes = Object.values(title.player && title.player.playlist ? title.player.playlist : {});
+        
+        if (episodes.length === 0) {
+            console.error("Нет доступных серий для данного тайтла.");
+            this.selectedEpisode = null;
+            return;
+        }
+
+        this.episodes = episodes;
+        this.selectedEpisode = episodes.find(ep => ep.serie === 1) || episodes[0];
+        this.hls = null;
+        this.lastLoadedSerie = null;
+    },
+
+    selectedEpisode: null,
+    episodes: [],
+    hls: null,
+    lastLoadedSerie: null,
+
+    oncreate: function(vnode) {
+        this.onupdate(vnode);
+    },    
+
+    onremove: function() {
+        if (this.hls) {
+            this.hls.destroy();
+        }
+    },
+
+    view: function(vnode) {
+        const title = vnode.attrs.title;
+        const baseUrl = "https://cache.libria.fun";
+    
+        if (!title.player || !title.player.playlist) {
+            return m(".player-container", [
+                m("h2", title.names.ru),
+                m("p", "Нет доступных серий для воспроизведения."),
+                m("button.back", { onclick: App.backToList }, "Назад")
+            ]);
+        }
+    
+        const handleSerieChange = (e) => {
+            const serieNumber = parseInt(e.target.value, 10);
+            const episode = this.episodes.find(ep => ep.serie === serieNumber);
+            if (episode) {
+                this.selectedEpisode = episode;
+                m.redraw();
+            }
+        };
+    
+        return m(".player-container", [
+            m("h2", title.names.ru),
+            m(".series-selector", { style: { marginTop: "10px", marginBottom: "20px" } }, [
+                m("label", { 
+                    for: "serie-input", 
+                    style: { marginRight: "5px" } 
+                }, "/ Серия:"),
+                m("input#serie-input", {
+                    type: "number",
+                    min: 1,
+                    max: this.episodes.length,
+                    value: this.selectedEpisode ? this.selectedEpisode.serie : 1,
+                    oninput: handleSerieChange,
+                    style: { width: "60px" }
+                })
+            ]),
+            m("video", { 
+                controls: true, 
+                autoplay: true, 
+                style: { width: "100%", maxWidth: "800px" }
+            }),
+            m("button.back", { onclick: App.backToList }, "Назад")
+        ]);
+    },    
+
+    onupdate: function(vnode) {
+        if (this.selectedEpisode && this.selectedEpisode.hls && this.selectedEpisode.hls.hd) {
+            if (this.selectedEpisode.serie !== this.lastLoadedSerie) {
+                this.lastLoadedSerie = this.selectedEpisode.serie;
+
+                const video = vnode.dom.querySelector('video');
+                const videoSrc = "https://cache.libria.fun" + this.selectedEpisode.hls.hd;
+
+                if (this.hls) {
+                    this.hls.destroy();
+                }
+
+                if (Hls.isSupported()) {
+                    this.hls = new Hls();
+                    this.hls.loadSource(videoSrc);
+                    this.hls.attachMedia(video);
+                    this.hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = videoSrc;
+                    video.addEventListener('loadedmetadata', function() {
+                        video.play();
+                    });
+                } else {
+                    console.error("HLS не поддерживается в этом браузере.");
+                }
+            }
+        } else {
+            console.error("HLS ссылка не найдена для серии:", this.selectedEpisode);
+        }
+    },
 };
 
 m.mount(document.getElementById("app"), App);
