@@ -6,8 +6,8 @@ is a static web application that allows you to browse an infinite list of random
 
 1. **View Titles**: Upon opening the page, the application automatically loads a list of random anime titles.
 2. **Scroll**: Scroll down the page to load more titles. New titles will load automatically as you reach the bottom.
-3. **Toggle Theme**: Click on the "🌙" button in the top right corner to switch between light and dark themes.
-4. **Toggle Images**: Click on the "📷" button in the top right corner to enable or disable the display of poster images.
+3. **Toggle Theme**: Click on the ☀️/🌙 button in the top right corner to switch between light and dark themes.
+4. **Toggle Images**: Click on the 📷/⚡ button in the top right corner to enable or disable the display of poster images.
 
 ### Technologies Used
 
