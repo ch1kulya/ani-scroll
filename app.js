@@ -41,6 +41,8 @@ const App = {
     toggleImages: function() {
         App.showImages = !App.showImages;
         localStorage.setItem('showImages', App.showImages);
+        const imageToggleBtn = document.getElementById('image-toggle');
+        imageToggleBtn.textContent = App.showImages ? '📷' : '⚡';
         m.redraw();
     },
 
@@ -51,6 +53,7 @@ const App = {
         window.addEventListener('scroll', App.onScroll);
         const imageToggleBtn = document.getElementById('image-toggle');
         imageToggleBtn.addEventListener('click', App.toggleImages);
+        imageToggleBtn.textContent = App.showImages ? '📷' : '⚡';
     },
 
     onremove: function() {
