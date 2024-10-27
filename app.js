@@ -1,5 +1,16 @@
 const API_URL = "https://api.anilibria.tv/v2/getRandomTitle";
 
+const genreColors = {
+    "Экшен": "rgba(255, 99, 71, 0.7)",
+    "Комедия": "rgba(255, 165, 0, 0.7)",
+    "Драма": "rgba(30, 144, 255, 0.7)",
+    "Фэнтези": "rgba(138, 43, 226, 0.7)",
+    "Романтика": "rgba(255, 105, 180, 0.7)",
+    "Ужасы": "rgba(139, 0, 0, 0.7)",
+    "Приключения": "rgba(60, 179, 113, 0.7)",
+    "Фантастика": "rgba(0, 128, 128, 0.7)"
+};
+
 const App = {
     titles: [],
     isLoading: false,
@@ -87,7 +98,7 @@ const TitleBlock = {
         const titleRu = data.names.ru || "Название неизвестно";
         const titleEn = data.names.en || "";
         const year = data.season && data.season.year ? data.season.year : "Год неизвестен";
-        const genres = data.genres ? data.genres.join(", ") : "Жанры неизвестны";
+        const genresArray = data.genres || [];
         const type = data.type && data.type.full_string ? data.type.full_string : "Тип неизвестен";
         const description = data.description || "Нет описания";
         const posterUrl = data.posters && data.posters.original && data.posters.original.url
@@ -100,7 +111,23 @@ const TitleBlock = {
                 m(".title-info", [
                     m("h2", titleRu),
                     m("p", [m("strong", "Год: "), year]),
-                    m("p", [m("strong", "Жанры: "), genres]),
+                    m("p", [
+                        m("strong", "Жанры: "),
+                        genresArray.map((genre, index) => {
+                            const decorationColor = showImages && genreColors[genre] ? genreColors[genre] : null;
+                            return [
+                                decorationColor ? m("span", { 
+                                    style: { 
+                                        textDecoration: "underline", 
+                                        textDecorationColor: decorationColor, 
+                                        textDecorationThickness: "2px",
+                                        textUnderlineOffset: "3px"
+                                    } 
+                                }, genre) : genre,
+                                index < genresArray.length - 1 ? ", " : ""
+                            ];
+                        })
+                    ]),
                     m("p", [m("strong", "Тип: "), type])
                 ])
             ]),
