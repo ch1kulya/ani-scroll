@@ -15,7 +15,7 @@ const App = {
     titles: [],
     isLoading: false,
     showImages: true,
-    selectedTitle: null, // Новое свойство
+    selectedTitle: null,
 
     loadMoreTitles: async function(count) {
         if (App.isLoading) return;
@@ -63,11 +63,6 @@ const App = {
         m.redraw();
     },
 
-    backToList: function() {
-        App.selectedTitle = null;
-        m.redraw();
-    },
-
     oninit: function() {
         const savedShowImages = localStorage.getItem('showImages');
         if (savedShowImages !== null) {
@@ -97,12 +92,6 @@ const App = {
     },
 
     view: function() {
-        if (App.selectedTitle) {
-            return m(".container", [
-                m(Player, { title: App.selectedTitle })
-            ]);
-        }
-
         return m(".container", [
             App.titles.map(title => m(TitleBlock, { data: title, showImages: App.showImages })),
             App.isLoading ? m(".spinner") : null
@@ -124,8 +113,10 @@ const TitleBlock = {
                           ? "https://www.anilibria.tv" + data.posters.original.url
                           : "";
 
-        return m(".title-block", { onclick: () => App.selectTitle(data), style: { cursor: "pointer" } }, [
-            m(".title-content", [
+        return m(".title-block", { style: { cursor: "pointer" } }, [
+            m(".title-content", {
+                onclick: () => App.selectTitle(data)
+            }, [
                 showImages && posterUrl ? m("img.poster", { src: posterUrl, alt: titleRu, loading: "lazy" }) : null,
                 m(".title-info", [
                     m("h2", titleRu),
@@ -150,7 +141,9 @@ const TitleBlock = {
                     m("p", [m("strong", "Тип: "), type])
                 ])
             ]),
-            m(".title-description", m("p", description))
+            App.selectedTitle === data 
+                ? m(Player, { title: data }) 
+                : m(".title-description", m("p", description))
         ]);
     }
 };
@@ -194,8 +187,7 @@ const Player = {
         if (!title.player || !title.player.playlist) {
             return m(".player-container", [
                 m("h2", title.names.ru),
-                m("p", "Нет доступных серий для воспроизведения."),
-                m("button.back", { onclick: App.backToList }, "Назад")
+                m("p", "Нет доступных серий для воспроизведения.")
             ]);
         }
     
@@ -209,27 +201,23 @@ const Player = {
         };
     
         return m(".player-container", [
-            m("h2", title.names.ru),
-            m(".series-selector", { style: { marginTop: "10px", marginBottom: "20px" } }, [
-                m("label", { 
-                    for: "serie-input", 
-                    style: { marginRight: "5px" } 
-                }, "/ Серия:"),
-                m("input#serie-input", {
-                    type: "number",
-                    min: 1,
-                    max: this.episodes.length,
-                    value: this.selectedEpisode ? this.selectedEpisode.serie : 1,
-                    oninput: handleSerieChange,
-                    style: { width: "60px" }
-                })
-            ]),
             m("video", { 
                 controls: true, 
                 autoplay: true, 
-                style: { width: "100%", maxWidth: "800px" }
+                style: { width: "99%", maxWidth: "900px" }
             }),
-            m("button.back", { onclick: App.backToList }, "Назад")
+            m("label", { 
+                for: "serie-input", 
+                style: { marginRight: "5px" } 
+            }, "Серия:"),
+            m("input#serie-input", {
+                type: "number",
+                min: 1,
+                max: this.episodes.length,
+                value: this.selectedEpisode ? this.selectedEpisode.serie : 1,
+                oninput: handleSerieChange,
+                style: { width: "50px" }
+            })
         ]);
     },    
 
