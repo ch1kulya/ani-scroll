@@ -113,7 +113,7 @@ const TitleBlock = {
                           ? "https://www.anilibria.tv" + data.posters.original.url
                           : "";
 
-        return m(".title-block", { style: { cursor: "pointer" } }, [
+        return m(".title-block", [
             m(".title-content", {
                 onclick: () => App.selectTitle(data)
             }, [
