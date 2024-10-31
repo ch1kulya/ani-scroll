@@ -52,6 +52,7 @@ const App = {
 
     toggleImages: function() {
         App.showImages = !App.showImages;
+        App.selectTitle(null);
         localStorage.setItem('showImages', App.showImages);
         const imageToggleBtn = document.getElementById('image-toggle');
         imageToggleBtn.textContent = App.showImages ? '📷' : '⚡';
@@ -142,10 +143,10 @@ const TitleBlock = {
             m(".content-wrapper", [
                 m(".title-description", { class: isSelected ? "hidden" : "visible" }, m("p", description)),
                 m(".player-container", { class: isSelected ? "visible" : "hidden" }, isSelected ? m(Player, { title: data }) : null),
-                m("footer", { 
+                showImages ? m("footer", { 
                     class: "toggle-preview",
                     onclick: () => App.selectTitle(isSelected ? null : data) 
-                }, isSelected ? "Закрыть предпросмотр" : "Открыть предпросмотр")
+                }, isSelected ? "Закрыть предпросмотр" : "Открыть предпросмотр") : null
             ])
         ]);
     }
