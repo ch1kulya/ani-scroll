@@ -145,7 +145,7 @@ const TitleBlock = {
                 m("footer", { 
                     class: "toggle-preview",
                     onclick: () => App.selectTitle(isSelected ? null : data) 
-                }, isSelected ? "──── Закрыть предпросмотр ────" : "──── Открыть предпросмотр ────")
+                }, isSelected ? "Закрыть предпросмотр" : "Открыть предпросмотр")
             ])
         ]);
     }
