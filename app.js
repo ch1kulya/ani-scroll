@@ -104,7 +104,6 @@ const TitleBlock = {
         const data = vnode.attrs.data;
         const showImages = vnode.attrs.showImages;
         const titleRu = data.names.ru || "Название неизвестно";
-        const titleEn = data.names.en || "";
         const year = data.season && data.season.year ? data.season.year : "Год неизвестен";
         const genresArray = data.genres || [];
         const type = data.type && data.type.full_string ? data.type.full_string : "Тип неизвестен";
@@ -112,11 +111,10 @@ const TitleBlock = {
         const posterUrl = data.posters && data.posters.original && data.posters.original.url
                           ? "https://www.anilibria.tv" + data.posters.original.url
                           : "";
+        const isSelected = App.selectedTitle === data;
 
         return m(".title-block", [
-            m(".title-content", {
-                onclick: () => App.selectTitle(data)
-            }, [
+            m(".title-content", [
                 showImages && posterUrl ? m("img.poster", { src: posterUrl, alt: titleRu, loading: "lazy" }) : null,
                 m(".title-info", [
                     m("h2", titleRu),
@@ -141,9 +139,14 @@ const TitleBlock = {
                     m("p", [m("strong", "Тип: "), type])
                 ])
             ]),
-            App.selectedTitle === data 
-                ? m(Player, { title: data }) 
-                : m(".title-description", m("p", description))
+            m(".content-wrapper", [
+                m(".title-description", { class: isSelected ? "hidden" : "visible" }, m("p", description)),
+                m(".player-container", { class: isSelected ? "visible" : "hidden" }, isSelected ? m(Player, { title: data }) : null),
+                m("footer", { 
+                    class: "toggle-preview",
+                    onclick: () => App.selectTitle(isSelected ? null : data) 
+                }, isSelected ? "──── Закрыть предпросмотр ────" : "──── Открыть предпросмотр ────")
+            ])
         ]);
     }
 };
@@ -200,24 +203,51 @@ const Player = {
             }
         };
     
-        return m(".player-container", [
+        return m(".player-container", { 
+            style: { 
+                position: "relative",
+                width: "100%", 
+                maxWidth: "900px",
+                margin: "0 auto"
+            } 
+        }, [
             m("video", { 
                 controls: true, 
                 autoplay: true, 
-                style: { width: "99%", maxWidth: "900px" }
+                style: { width: "100%", height: "auto" },
+                src: `${baseUrl}/${this.selectedEpisode.url}`
             }),
-            m("label", { 
-                for: "serie-input", 
-                style: { marginRight: "5px" } 
-            }, "Серия:"),
-            m("input#serie-input", {
-                type: "number",
-                min: 1,
-                max: this.episodes.length,
-                value: this.selectedEpisode ? this.selectedEpisode.serie : 1,
-                oninput: handleSerieChange,
-                style: { width: "50px" }
-            })
+            m(".serie-selector", {
+                style: {
+                    position: "absolute",
+                    top: "20px",
+                    left: "7px",
+                    padding: "2px 5px",
+                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    zIndex: 10
+                }
+            }, [
+                m("label", { 
+                    for: "serie-input", 
+                    style: { 
+                        marginRight: "5px" ,
+                    } 
+                }, "Серия:"),
+                m("input#serie-input", {
+                    type: "number",
+                    min: 1,
+                    max: this.episodes.length,
+                    value: this.selectedEpisode ? this.selectedEpisode.serie : 1,
+                    oninput: handleSerieChange,
+                    style: { 
+                        width: "40px",
+                        height: "20px",
+                        marginTop: "14px"
+                    }
+                })
+            ])
         ]);
     },    
 
