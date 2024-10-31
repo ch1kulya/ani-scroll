@@ -221,8 +221,9 @@ const Player = {
                 style: {
                     position: "absolute",
                     top: "20px",
-                    left: "7px",
-                    padding: "2px 5px",
+                    left: "-5px",
+                    padding: "5px",
+                    backgroundColor: "var(--background-color)",
                     borderRadius: "4px",
                     display: "flex",
                     alignItems: "center",
@@ -244,7 +245,6 @@ const Player = {
                     style: { 
                         width: "40px",
                         height: "20px",
-                        marginTop: "14px"
                     }
                 })
             ])
