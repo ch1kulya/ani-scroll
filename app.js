@@ -113,6 +113,7 @@ const TitleBlock = {
                           ? "https://www.anilibria.tv" + data.posters.original.url
                           : "";
         const isSelected = App.selectedTitle === data;
+        const isClosing = vnode.state.isClosing;
 
         return m(".title-block", [
             m(".title-content", [
@@ -142,10 +143,23 @@ const TitleBlock = {
             ]),
             m(".content-wrapper", [
                 m(".title-description", { class: isSelected ? "hidden" : "visible" }, m("p", description)),
-                m(".player-container", { class: isSelected ? "visible" : "hidden" }, isSelected ? m(Player, { title: data }) : null),
+                m(".player-container", { class: isSelected && !isClosing ? "visible" : "hidden" }, 
+                    (isSelected || isClosing) ? m(Player, { title: data }) : null
+                ),
                 showImages ? m("footer", { 
                     class: "toggle-preview",
-                    onclick: () => App.selectTitle(isSelected ? null : data) 
+                    onclick: () => {
+                        if (isSelected) {
+                            vnode.state.isClosing = true;
+                            m.redraw();
+                            setTimeout(() => {
+                                vnode.state.isClosing = false;
+                                App.selectTitle(null);
+                            }, 500);
+                        } else {
+                            App.selectTitle(data);
+                        }
+                    } 
                 }, isSelected ? "Закрыть предпросмотр" : "Открыть предпросмотр") : null
             ])
         ]);
