@@ -1,17 +1,17 @@
-### InfinityAnimeList
+## InfinityAnimeList
 
-is a static web application that allows you to browse an infinite list of random anime titles directly in your browser. It's fast, lightweight, and easy to use—no server-side processing required.
+is a static web application that allows you to get titles from Anilibria by scrolling through the feed.
 
 ### Usage
 
-1. **View Titles**: Upon opening the page, the application automatically loads a list of random anime titles.
-2. **Scroll**: Scroll down the page to load more titles. New titles will load automatically as you reach the bottom.
-3. **Toggle Theme**: Click on the ☀️/🌙 button in the top right corner to switch between light and dark themes.
-4. **Toggle Images**: Click on the 📷/⚡ button in the top right corner to enable or disable the display of poster images.
+1. **To get titles**: Scroll down the page. New titles will load automatically.
+2. **To switch between themes**: Click on the button in the top right corner.
+3. **To switch the detalization mode**: Click on the button in the top left corner.
 
 ### Technologies Used
 
-- **HTML, CSS, JavaScript**: Core web technologies for building the application.
-- **[Mithril.js](https://mithril.js.org/)**: A modern client-side JavaScript framework for building single-page applications.
-- **[styleBasic](https://github.com/ch1kulya/styleBasic)**: A universal stylesheet for consistent styling and theme support.
-- **Anilibria API**: Used to fetch random anime titles.
+- **[Mithril.js](https://mithril.js.org/)**: Used to build single-page application.
+- **[Kyo.css](https://github.com/ch1kulya/Kyo.css)**: Used as a simple universal stylesheet.
+- **[Anilibria API](https://github.com/anilibria/docs/blob/master/api_v2.md)**: Used to fetch random anime titles.
+
+#### Contributing is encouraged 🤗
