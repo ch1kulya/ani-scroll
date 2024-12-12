@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>InfinityAnimeList</title>
-    <link rel="stylesheet" href="https://raw.githack.com/ch1kulya/Kyo.css/legacy/styleBasic.css">
-    <link rel="icon" href="https://raw.githack.com/ch1kulya/AutoCrop/main/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://raw.githack.com/ch1kulya/Kyo.css/legacy/styleBasic.css" onerror="handleError()">
+    <link rel="icon" href="https://raw.githack.com/ch1kulya/AutoCrop/main/favicon.ico" type="image/x-icon" onerror="handleError()">
     <script src="https://unpkg.com/mithril/mithril.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -103,15 +103,37 @@
         opacity: 1;
         max-height: 1000px;
     }
+    #error-message { 
+      display: none; 
+      color: red; 
+    }
     </style>
+    <script>
+        function handleError() {
+            var errorDiv = document.getElementById('error-message');
+            if (errorDiv) {
+                errorDiv.style.display = 'block';
+            }
+            var content = document.getElementById('content');
+            if (content) {
+                content.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
-    <button id="image-toggle" class="theme-toggle">📷</button>
-    <button id="theme-toggle" class="theme-toggle">🌙</button>
-    <div class="container">
-        <div id="app"></div>
+    <div id="error-message">
+        <p>Unfortunately, our service is not available in your country. Please consider using a VPN to access the site.</p>
+        <p>К сожалению, наш сервис недоступен в вашей стране. Пожалуйста, рассмотрите возможность использования VPN для доступа к сайту.</p>
     </div>
-    <script src="https://raw.githack.com/ch1kulya/Kyo.css/legacy/theme.js"></script>
+    <div id="content">
+        <button id="image-toggle" class="theme-toggle">📷</button>
+        <button id="theme-toggle" class="theme-toggle">🌙</button>
+        <div class="container">
+            <div id="app"></div>
+        </div>
+    </div>
+    <script src="https://raw.githack.com/ch1kulya/Kyo.css/legacy/theme.js" onerror="handleError()"></script>
     <script src="app.js"></script>
 </body>
 </html>
