@@ -26,7 +26,10 @@
   --input-text: #ffffff;
 }
 body {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
