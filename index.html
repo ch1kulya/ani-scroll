@@ -3,129 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>InfinityAnimeList</title>
-    <link rel="stylesheet" href="https://raw.githack.com/ch1kulya/Kyo.css/legacy/styleBasic.css" onerror="handleError()">
-    <link rel="icon" href="https://raw.githack.com/ch1kulya/AutoCrop/main/favicon.ico" type="image/x-icon" onerror="handleError()">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://i.ibb.co/6RK4zsqq/favicon-32x32.png" type="image/png">
+    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="static/base.css">
     <script src="https://unpkg.com/mithril/mithril.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>
-    .title-block {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .title-content {
-        display: flex;
-        align-items: flex-start;
-    }
-    footer {
-        cursor: pointer;
-        margin: 0px;
-        padding: 0px;
-        transition: opacity 0.5s ease, word-spacing 1s ease;
-    }
-    footer:hover {
-        opacity: 255;
-        word-spacing: 1.8px;
-    }
-    label {
-        font-size: 14px;
-    }
-    input {
-        margin-bottom: 0;
-    }
-    .poster {
-        max-width: 120px;
-        margin-right: 20px;
-        border-radius: 4px;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    video {
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        background-color: transparent;
-        margin-top: 30px;
-        margin-bottom: 5px;
-    }
-    .title-info h2 {
-        margin-bottom: 10px;
-    }
-    .title-description p {
-        margin-top: 15px;
-    }
-    .spinner {
-        display: block;
-        margin: 0 auto;
-    }
-    .toggle-buttons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 20px;
-    }
-    #image-toggle {
-        top: 20px;
-        left: 20px;
-        right: unset;
-    }
-    .container {
-        width: 90%;
-        max-width: 900px;
-    }
-    @media (max-width: 600px) {
-        .title-content{
-            flex-direction: column;
-        }
-        .poster {
-            align-items: center;
-            margin: auto;
-            max-width: 80%;
-            margin-bottom: 15px;
-        }
-    }
-    .content-wrapper {
-        position: relative;
-        overflow: hidden;
-    }
-    .title-description, .player-container {
-        transition: opacity 0.5s ease, max-height 0.5s ease;
-        opacity: 1;
-        max-height: 1000px;
-        overflow: hidden;
-    }
-    .title-description.hidden, .player-container.hidden {
-        opacity: 0;
-        max-height: 0;
-        padding: 0;
-        margin: 0;
-        pointer-events: none;
-    }
-    .title-description.visible, .player-container.visible {
-        opacity: 1;
-        max-height: 1000px;
-    }
-    #error-message { 
-      display: none; 
-      color: red; 
-    }
-    </style>
-    <script>
-        function handleError() {
-            var errorDiv = document.getElementById('error-message');
-            if (errorDiv) {
-                errorDiv.style.display = 'block';
-            }
-            var content = document.getElementById('content');
-            if (content) {
-                content.style.display = 'none';
-            }
-        }
-    </script>
 </head>
 <body>
-    <div id="error-message">
-        <p>Unfortunately, our service is not available in your country. Please consider using a VPN to access the site.</p>
-        <p>К сожалению, наш сервис недоступен в вашей стране. Пожалуйста, рассмотрите возможность использования VPN для доступа к сайту.</p>
-    </div>
     <div id="content">
         <button id="image-toggle" class="theme-toggle">📷</button>
         <button id="theme-toggle" class="theme-toggle">🌙</button>
@@ -133,7 +20,7 @@
             <div id="app"></div>
         </div>
     </div>
-    <script src="https://raw.githack.com/ch1kulya/Kyo.css/legacy/theme.js" onerror="handleError()"></script>
-    <script src="app.js"></script>
+    <script src="static/switch.js"></script>
+    <script src="static/app.js"></script>
 </body>
 </html>

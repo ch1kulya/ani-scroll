@@ -160,7 +160,7 @@ const TitleBlock = {
                             App.selectTitle(data);
                         }
                     } 
-                }, isSelected ? "Закрыть предпросмотр" : "Открыть предпросмотр") : null
+                }, isSelected ? "Закрыть плеер" : "Открыть плеер") : null
             ])
         ]);
     }

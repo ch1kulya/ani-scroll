@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --link-color: #0066cc;
+  --heading-color: #333333;
+  --border-color: #cccccc;
+  --button-background: #e0e0e0;
+  --button-text: #000000;
+  --input-background: #ffffff;
+  --input-text: #000000;
+}
+:root.dark-mode {
+  --background-color: #121212;
+  --text-color: #e0e0e0;
+  --link-color: #bb86fc;
+  --heading-color: #ffffff;
+  --border-color: #333333;
+  --button-background: #1f1f1f;
+  --button-text: #ffffff;
+  --input-background: #1f1f1f;
+  --input-text: #ffffff;
+}
+body {
+  font-family: "IBM Plex Mono", monospace;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  transition: background-color 0.5s, color 0.5s;
+  padding: 20px;
+}
+h2 {
+  color: var(--heading-color);
+  margin-bottom: 10px;
+}
+p {
+  margin-bottom: 15px;
+}
+input {
+  background-color: var(--input-background);
+  color: var(--input-text);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+  width: 100%;
+  margin-bottom: 15px;
+  font-family: inherit;
+}
+footer {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.6;
+}
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border-left-color: var(--text-color);
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.theme-toggle:hover {
+  color: var(--link-color);
+  background-color: unset;
+}
