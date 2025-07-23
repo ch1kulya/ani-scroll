@@ -80,6 +80,7 @@ footer {
   border: none;
   cursor: pointer;
   transition: color 0.3s;
+  font-size: 1.2rem;
 }
 .theme-toggle:hover {
   color: var(--link-color);

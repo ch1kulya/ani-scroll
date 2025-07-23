@@ -177,7 +177,7 @@ const App = {
         App.selectTitle(null);
         localStorage.setItem('showImages', App.showImages);
         const imageToggleBtn = document.getElementById('image-toggle');
-        imageToggleBtn.textContent = App.showImages ? '📷' : '⚡';
+        imageToggleBtn.textContent = App.showImages ? '🎨' : '⚡';
         m.redraw();
     },
 
@@ -220,7 +220,7 @@ const App = {
         window.addEventListener('scroll', App.onScroll);
         const imageToggleBtn = document.getElementById('image-toggle');
         imageToggleBtn.addEventListener('click', App.toggleImages);
-        imageToggleBtn.textContent = App.showImages ? '📷' : '⚡';
+        imageToggleBtn.textContent = App.showImages ? '🎨' : '⚡';
     },
 
     onremove: function() {
@@ -363,62 +363,61 @@ const Player = {
     oninit: function(vnode) {
         const title = vnode.attrs.title;
         const episodes = title.episodes || [];
-        
         if (episodes.length === 0) {
             console.error("Нет доступных серий для данного тайтла.");
             this.selectedEpisode = null;
             return;
         }
-
         this.episodes = episodes.sort((a, b) => {
             const orderA = a.ordinal || a.sort_order || 0;
             const orderB = b.ordinal || b.sort_order || 0;
             return orderA - orderB;
         });
-
         this.selectedEpisode = this.episodes[0];
         this.hls = null;
         this.lastLoadedEpisodeId = null;
+        this.inputWidth = this.calculateInputWidth(this.episodes.length);
     },
-
     selectedEpisode: null,
     episodes: [],
     hls: null,
     lastLoadedEpisodeId: null,
-
+    inputWidth: "40px", // Начальная ширина
+    calculateInputWidth: function(maxEpisodes) {
+        // Определяем количество символов в максимальном номере серии
+        const numDigits = maxEpisodes.toString().length;
+        return Math.max(30, 20 + (numDigits * 10)) + "px";
+    },
     oncreate: function(vnode) {
         this.onupdate(vnode);
     },    
-
     onremove: function() {
         if (this.hls) {
             this.hls.destroy();
         }
     },
-
     view: function(vnode) {
         const title = vnode.attrs.title;
-    
         if (!this.episodes || this.episodes.length === 0) {
             return m(".player-container", [
                 m("h2", title.name?.main),
                 m("p", "Нет доступных серий для воспроизведения.")
             ]);
         }
-    
         const handleSerieChange = (e) => {
             const episodeNumber = parseInt(e.target.value, 10);
-            const episode = this.episodes.find((ep, index) => {
-                return (index + 1) === episodeNumber;
-            });
-            if (episode) {
-                this.selectedEpisode = episode;
-                m.redraw();
+            // Проверяем, что введено корректное число
+            if (!isNaN(episodeNumber) && episodeNumber >= 1 && episodeNumber <= this.episodes.length) {
+                const episode = this.episodes.find((ep, index) => {
+                    return (index + 1) === episodeNumber;
+                });
+                if (episode) {
+                    this.selectedEpisode = episode;
+                    m.redraw();
+                }
             }
         };
-
         const currentEpisodeNumber = this.episodes.findIndex(ep => ep.id === this.selectedEpisode.id) + 1;
-    
         return m(".player-container", { 
             style: { 
                 position: "relative",
@@ -432,7 +431,6 @@ const Player = {
                 autoplay: true, 
                 style: { width: "100%", height: "auto" }
             }),
-            // TODO adaptive selector (now it breakes when >9 ep.)
             m(".serie-selector", {
                 style: {
                     position: "absolute",
@@ -459,35 +457,30 @@ const Player = {
                     value: currentEpisodeNumber,
                     oninput: handleSerieChange,
                     style: { 
-                        width: "40px",
+                        width: this.inputWidth,
                         height: "20px",
+                        textAlign: "center",
+                        padding: "0 2px"
                     }
                 })
             ])
         ]);
     },    
-
     onupdate: function(vnode) {
         if (this.selectedEpisode && this.selectedEpisode.id !== this.lastLoadedEpisodeId) {
             this.lastLoadedEpisodeId = this.selectedEpisode.id;
-
             const video = vnode.dom.querySelector('video');
-            
             const videoSrc = this.selectedEpisode.hls_1080 || 
                            this.selectedEpisode.hls_720 || 
                            this.selectedEpisode.hls_480;
-
             if (!videoSrc) {
                 console.error("Нет доступных ссылок на видео для эпизода:", this.selectedEpisode);
                 return;
             }
-
             const fullVideoSrc = videoSrc.startsWith('http') ? videoSrc : `https://anilibria.top${videoSrc}`;
-
             if (this.hls) {
                 this.hls.destroy();
             }
-
             if (Hls.isSupported()) {
                 this.hls = new Hls();
                 this.hls.loadSource(fullVideoSrc);

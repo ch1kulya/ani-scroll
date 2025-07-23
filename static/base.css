@@ -41,6 +41,9 @@ video {
 .title-info h2 {
     margin-bottom: 10px;
 }
+.title-info p {
+    margin-bottom: 5px;
+}
 .title-description p {
     margin-top: 15px;
 }
