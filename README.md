@@ -3,7 +3,7 @@
 ## AniScroll
 is a static web application that allows you to get titles from Anilibria by scrolling through the feed.
 
-![picture](https://github.com/user-attachments/assets/826bc540-4488-41b1-9168-f3834d7976c5)
+![rounded-video](https://github.com/user-attachments/assets/ac71e03c-fee5-4842-b542-6bed1f45883d)
 
 </div>
 
