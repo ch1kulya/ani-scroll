@@ -281,22 +281,23 @@ const App = {
 };
 
 const TitleBlock = {
+    oninit: function(vnode) {
+        vnode.state.showPlayerModal = false;
+        vnode.state.isClosing = false;
+    },
     view: function(vnode) {
         const data = vnode.attrs.data;
         const showImages = vnode.attrs.showImages;
-        
         const titleRu = data.name?.main || "Название неизвестно";
         const year = data.year || "Год неизвестен";
         const genresArray = data.genres || [];
         const type = data.type?.description || "Тип неизвестен";
         const description = data.description || "Нет описания";
-        
         const posterUrl = data.poster?.optimized?.src || data.poster?.src || "";
         const fullPosterUrl = posterUrl ? `https://anilibria.top${posterUrl}` : "";
-        
-        const isSelected = App.selectedTitle === data;
         const isClosing = vnode.state.isClosing;
-
+        const showPlayerModal = vnode.state.showPlayerModal;
+        
         return m(".title-block", [
             m(".title-content", [
                 showImages && fullPosterUrl ? m("img.poster", { 
@@ -333,27 +334,51 @@ const TitleBlock = {
                 ])
             ]),
             m(".content-wrapper", [
-                m(".title-description", { class: isSelected ? "hidden" : "visible" }, m("p", description)),
-                m(".player-container", { class: isSelected && !isClosing ? "visible" : "hidden" }, 
-                    (isSelected || isClosing) && data.episodes && data.episodes.length > 0 ? 
-                        m(Player, { title: data }) : 
-                        (isSelected || isClosing) ? m("p", "Нет доступных эпизодов для этого тайтла") : null
-                ),
-                showImages ? m("footer", { 
-                    class: "toggle-preview",
-                    onclick: () => {
-                        if (isSelected) {
-                            vnode.state.isClosing = true;
-                            m.redraw();
-                            setTimeout(() => {
-                                vnode.state.isClosing = false;
-                                App.selectTitle(null);
-                            }, 500);
-                        } else {
+                m(".title-description", m("p", [
+                    description,
+                    showImages ? m("span", {
+                        class: "play-button-inline",
+                        title: "Открыть плеер",
+                        onclick: (e) => {
+                            e.stopPropagation();
                             App.selectTitle(data);
+                            vnode.state.showPlayerModal = true;
+                            m.redraw();
                         }
-                    } 
-                }, isSelected ? "Закрыть плеер" : "Открыть плеер") : null
+                    }, m.trust('&#8203;'),
+                    m("svg", {
+                            width: "14",
+                            height: "14",
+                            viewBox: "0 0 24 24",
+                            fill: "none",
+                            stroke: "currentColor",
+                            "stroke-width": "2",
+                            "stroke-linecap": "round",
+                            "stroke-linejoin": "round",
+                            class: "play-icon"
+                        }, m("polygon", { points: "5 3 19 12 5 21 5 3" }))
+                    ) : null
+                ])),
+                m(".player-overlay", { 
+                    class: showPlayerModal && !isClosing ? "visible" : "hidden",
+                    onclick: () => {
+                        vnode.state.isClosing = true;
+                        m.redraw();
+                        setTimeout(() => {
+                            vnode.state.isClosing = false;
+                            vnode.state.showPlayerModal = false;
+                            App.selectTitle(null);
+                            m.redraw();
+                        }, 300);
+                    }
+                }),
+                m(".player-container.modal", { 
+                    class: showPlayerModal && !isClosing ? "visible" : "hidden"
+                }, 
+                    (showPlayerModal || isClosing) && data.episodes && data.episodes.length > 0 ? 
+                        m(Player, { title: data }) : 
+                        (showPlayerModal || isClosing) ? m("p", "Нет доступных эпизодов для этого тайтла") : null
+                )
             ])
         ]);
     }
@@ -423,20 +448,20 @@ const Player = {
                 position: "relative",
                 width: "100%", 
                 maxWidth: "900px",
-                margin: "0 auto"
+                margin: "0",
             } 
         }, [
             m("video", { 
                 controls: true, 
                 autoplay: true, 
-                style: { width: "100%", height: "auto" }
+                style: { width: "100%", height: "auto", margin: "0"}
             }),
             m(".serie-selector", {
                 style: {
                     position: "absolute",
-                    top: "20px",
-                    left: "-5px",
-                    padding: "5px",
+                    top: "0",
+                    right: "0",
+                    padding: "7px",
                     backgroundColor: "var(--background-color)",
                     borderRadius: "4px",
                     display: "flex",

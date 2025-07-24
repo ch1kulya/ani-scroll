@@ -80,22 +80,94 @@ video {
 }
 .content-wrapper {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
-.title-description, .player-container {
+.title-description {
     transition: opacity 0.5s ease, max-height 0.5s ease;
     opacity: 1;
     max-height: 1000px;
     overflow: hidden;
 }
-.title-description.hidden, .player-container.hidden {
-    opacity: 0;
-    max-height: 0;
-    padding: 0;
-    margin: 0;
-    pointer-events: none;
-}
-.title-description.visible, .player-container.visible {
+.title-description.hidden {
     opacity: 1;
     max-height: 1000px;
+}
+.player-container.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    min-width: 300px;
+    min-height: 100px;
+    width: 90%;
+    max-width: 800px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.player-container.modal video {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.player-container.modal.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.player-container.modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.9);
+}
+
+.player-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+}
+
+.player-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.player-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+.play-button-inline {
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 5px; 
+    padding: 2px 4px;
+    line-height: 1;
+    color: var(--text-color);
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    user-select: none;
+    vertical-align: middle;
+}
+.play-button-inline:hover {
+    opacity: 0.9;
+    transform: scale(1.1);=
 }
