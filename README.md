@@ -8,6 +8,6 @@ is a static web application that allows you to get titles from Anilibria by scro
 </div>
 
 > [!WARNING]
-> The application relies on AniLibery API v1 and may not be available if the API is unavailable.
+> The application relies on AniLiberty API v1 and may not be available if the API is unavailable.
 
 #### Contributing is encouraged 🤗
